@@ -1,6 +1,23 @@
 require 'digest/md5'
 
 module CouchRest
+  
+  # The default design document name generator is simple, but you can override it
+  # by setting CouchRest.design_name_fun
+  DEFAULT_DESIGN_NAME_FUN = lambda { |klass| klass.to_s }
+  
+  @@design_name_fun = DEFAULT_DESIGN_NAME_FUN
+  
+  # Get current design document name generator Proc
+  def self.design_name_fun
+    @@design_name_fun
+  end
+  
+  # Set the design name generator Proc
+  def self.design_name_fun= fun
+    @@design_name_fun = fun
+  end
+  
   module Mixins
     module DesignDoc
       
@@ -25,7 +42,7 @@ module CouchRest
         end
 
         def design_doc_slug
-          self.to_s
+          CouchRest.design_name_fun self
         end
 
         def default_design_doc
@@ -47,8 +64,8 @@ module CouchRest
         # DEPRECATED
         # use stored_design_doc to retrieve the current design doc
         def all_design_doc_versions(db = database)
-          db.documents :startkey => "_design/#{self.to_s}", 
-            :endkey => "_design/#{self.to_s}-\u9999"
+          db.documents :startkey => "#{design_doc_id}", 
+            :endkey => "#{design_doc_id}-\u9999"
         end
        
         # Retreive the latest version of the design document directly
