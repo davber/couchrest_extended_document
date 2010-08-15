@@ -9,7 +9,7 @@ class Article < CouchRest::ExtendedDocument
   view_by :tags,
     :map => 
       "function(doc) {
-        if (doc['couchrest-type'] == 'Article' && doc.tags) {
+        if (doc[#{CouchRest.type_field}] == 'Article' && doc.tags) {
           doc.tags.forEach(function(tag){
             emit(tag, 1);
           });

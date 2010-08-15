@@ -6,7 +6,11 @@ module CouchRest
   # by setting CouchRest.design_name_fun
   DEFAULT_DESIGN_NAME_FUN = lambda { |klass| klass.to_s }
   
+  # The default type field, which can be chanegd by setting CouchRest.type_field
+  DEFAULT_TYPE_FIELD = 'couchrest-type'
+  
   @@design_name_fun = DEFAULT_DESIGN_NAME_FUN
+  @@type_field = DEFAULT_TYPE_FIELD
   
   # Get current design document name generator Proc
   def self.design_name_fun
@@ -16,6 +20,16 @@ module CouchRest
   # Set the design name generator Proc
   def self.design_name_fun= fun
     @@design_name_fun = fun
+  end
+  
+  # Get the current type field name
+  def self.type_field
+    @@type_field
+  end
+  
+  # Set the type field name
+  def self.type_field= type_field
+    @@type_field = type_field
   end
   
   module Mixins
@@ -46,13 +60,14 @@ module CouchRest
         end
 
         def default_design_doc
+          type_field = CouchRest.type_field
           {
             "_id" => design_doc_id,
             "language" => "javascript",
             "views" => {
               'all' => {
                 'map' => "function(doc) {
-                  if (doc['couchrest-type'] == '#{self.to_s}') {
+                  if (doc['#{type_field}'] == '#{self.to_s}') {
                     emit(doc['_id'],1);
                   }
                 }"

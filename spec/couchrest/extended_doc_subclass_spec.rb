@@ -92,7 +92,9 @@ describe "Subclassing an ExtendedDocument" do
     OnlineCourse.design_doc['views'].keys.should_not include('by_title')
   end
   
-  it "should have an all view with a guard clause for couchrest-type == subclass name in the map function" do
+  it "should have an all view with a guard clause for type field == subclass name in the map function" do
+    # Yes, we here assume 'couchrest-type'.
+    # TODO: use the CouchRest.field_type here instead
     OnlineCourse.design_doc['views']['all']['map'].should =~ /if \(doc\['couchrest-type'\] == 'OnlineCourse'\)/
   end
 end

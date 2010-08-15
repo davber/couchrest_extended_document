@@ -54,7 +54,8 @@ module CouchRest
     # ==== Returns
     #  a document instance
     def self.create_from_database(doc = {})
-      base = (doc['couchrest-type'].blank? || doc['couchrest-type'] == self.to_s) ? self : doc['couchrest-type'].constantize
+      type_field = CouchRest.type_field
+      base = (doc[type_field].blank? || doc[type_field] == self.to_s) ? self : doc[type_field].constantize
       base.new(doc, :directly_set_attributes => true)      
     end
     
@@ -70,7 +71,7 @@ module CouchRest
       prepare_all_attributes(doc, options) # defined in CouchRest::Mixins::Attributes
       super(doc)
       unless self['_id'] && self['_rev']
-        self['couchrest-type'] = self.class.to_s
+        self[CouchRest.type_field] = self.class.to_s
       end
       after_initialize if respond_to?(:after_initialize)
     end

@@ -80,7 +80,7 @@ module CouchRest
           ducktype = opts.delete(:ducktype)
           unless ducktype || opts[:map]
             opts[:guards] ||= []
-            opts[:guards].push "(doc['couchrest-type'] == '#{self.to_s}')"
+            opts[:guards].push "(doc[#{CouchRest.type_field}] == '#{self.to_s}')"
           end
           keys.push opts
           design_doc.view_by(*keys)

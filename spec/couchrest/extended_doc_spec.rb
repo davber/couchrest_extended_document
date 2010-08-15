@@ -153,7 +153,7 @@ describe "ExtendedDocument" do
 
     it "should not failed on a nil value in argument" do
       @obj = Basic.new(nil)
-      @obj.should == { 'couchrest-type' => 'Basic' }
+      @obj.should == { CouchRest.type_field => 'Basic' }
     end
   end
   
@@ -176,17 +176,17 @@ describe "ExtendedDocument" do
   describe "creating a new document from database" do
 
     it "should instantialize" do
-      doc = Article.create_from_database({'_id' => 'testitem1', '_rev' => 123, 'couchrest-type' => 'Article', 'name' => 'my test'})
+      doc = Article.create_from_database({'_id' => 'testitem1', '_rev' => 123, CouchRest.type_field => 'Article', 'name' => 'my test'})
       doc.class.should eql(Article)
     end
 
-    it "should instantialize of same class if no couchrest-type included from DB" do
+    it "should instantialize of same class if no type field included from DB" do
       doc = Article.create_from_database({'_id' => 'testitem1', '_rev' => 123, 'name' => 'my test'})
       doc.class.should eql(Article)
     end
 
     it "should instantialize document of different type" do
-      doc = Article.create_from_database({'_id' => 'testitem2', '_rev' => 123, 'couchrest-type' => 'WithCallBacks', 'name' => 'my test'})
+      doc = Article.create_from_database({'_id' => 'testitem2', '_rev' => 123, CouchRest.type_field => 'WithCallBacks', 'name' => 'my test'})
       doc.class.should eql(WithCallBacks)
     end
 
@@ -550,7 +550,7 @@ describe "ExtendedDocument" do
     end
     
     it "should set the type" do
-      @sobj['couchrest-type'].should == 'Basic'
+      @sobj[CouchRest.type_field].should == 'Basic'
     end
     
     describe "save!" do
