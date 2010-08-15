@@ -5,6 +5,15 @@ setting properties, callbacks, typecasting, and validations.
 
 This gem, *davber_couchrest_extended_document*, is a revision of the original gem, allowing both the design document name and type fields to be configurable, instead of the defaults, which is the identity function and the string "couchrest-type", respectively.
 
+The way to set the type field used is
+
+	CouchRest.type_field = 'my_type'
+	
+and the way to set the design document naming mapper is
+
+	CouchRest.design_name_fun = lambda { |klass| klas.to_s.downcase }
+	
+
 Note: CouchRest::ExtendedDocument only supports CouchDB 0.10.0 or newer.
 
 ## Install
