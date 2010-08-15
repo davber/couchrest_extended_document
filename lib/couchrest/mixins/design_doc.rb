@@ -56,7 +56,7 @@ module CouchRest
         end
 
         def design_doc_slug
-          CouchRest.design_name_fun self
+          CouchRest.design_name_fun.call self
         end
 
         def default_design_doc
